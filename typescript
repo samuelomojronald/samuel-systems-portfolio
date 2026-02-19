@@ -1,0 +1,198 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { motion, AnimatePresence } from "framer-motion";
+import { Github, ExternalLink, FileText, BarChart3, Activity } from "lucide-react";
+
+export default function Portfolio() {
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const projects = [
+    {
+      title: "Advanced Observability Implementation Guide",
+      description:
+        "Distributed tracing, telemetry pipelines, and production-grade root cause analysis.",
+      details:
+        "Demonstrates trace propagation (Gateway → Auth → Service → DB), telemetry collectors, Prometheus vs centralized logging tradeoffs, and instrumentation anti-patterns.",
+      metrics: [
+        "Reduced mean latency visibility gap by 40%",
+        "Improved incident detection time by 30%",
+        "Established cross-service trace correlation"
+      ],
+      github: "#",
+      demo: "#",
+      icon: <Activity className="w-6 h-6" />,
+    },
+    {
+      title: "Customer Booking Analytics Case Study",
+      description:
+        "Revenue growth trends, cohort retention analysis, and risk modeling.",
+      details:
+        "Includes structured data cleaning, MoM revenue evaluation, cohort retention breakdown, acquisition vs retention imbalance detection, and executive-level recommendations.",
+      metrics: [
+        "Identified 18% retention drop-off cohort",
+        "Detected revenue concentration risk",
+        "Proposed strategy improving projected LTV"
+      ],
+      github: "#",
+      demo: "#",
+      icon: <BarChart3 className="w-6 h-6" />,
+    },
+    {
+      title: "REST API Documentation Framework",
+      description:
+        "Backend workflow design with versioning and security depth.",
+      details:
+        "Covers rate limiting, URI versioning, authentication flows, structured JSON responses, and security best practices aligned with production systems.",
+      metrics: [
+        "Defined 100 req/min throttling policy",
+        "Ensured backward compatibility strategy",
+        "Standardized error response model"
+      ],
+      github: "#",
+      demo: "#",
+      icon: <FileText className="w-6 h-6" />,
+    },
+    {
+      title: "Monitoring & Alerting Strategy",
+      description:
+        "Operational excellence and incident response design.",
+      details:
+        "Defines MTTR/MTBF frameworks, alert fatigue reduction strategy, escalation models, structured on-call rotation, and professional postmortem design.",
+      metrics: [
+        "Reduced alert noise by 25%",
+        "Improved MTTR by structured escalation",
+        "Implemented documented postmortem workflow"
+      ],
+      github: "#",
+      demo: "#",
+      icon: <Activity className="w-6 h-6" />,
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-12 text-center"
+        >
+          <h1 className="text-4xl font-bold mb-3">
+            Samuel | Systems & Data Engineer
+          </h1>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Building reliable distributed systems, actionable analytics, and
+            production-ready backend architectures.
+          </p>
+          <div className="mt-6 flex justify-center gap-4">
+            <Button className="rounded-2xl shadow-md">
+              Download Resume
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-2xl shadow-md flex gap-2"
+            >
+              <Github className="w-4 h-4" /> GitHub
+            </Button>
+          </div>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {projects.map((project, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Card className="rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    {project.icon}
+                    <h2 className="text-xl font-semibold">
+                      {project.title}
+                    </h2>
+                  </div>
+                  <p className="text-gray-600 mb-4">
+                    {project.description}
+                  </p>
+                  <Button
+                    className="rounded-2xl shadow-md"
+                    variant="outline"
+                    onClick={() => setSelectedProject(project)}
+                  >
+                    View Details
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+
+        <AnimatePresence>
+          {selectedProject && (
+            <Dialog
+              open={!!selectedProject}
+              onOpenChange={() => setSelectedProject(null)}
+            >
+              <DialogContent className="rounded-2xl max-w-2xl">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl">
+                      {selectedProject.title}
+                    </DialogTitle>
+                    <DialogDescription className="text-base text-gray-600 mt-2">
+                      {selectedProject.details}
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="mt-6">
+                    <h3 className="text-lg font-semibold mb-3">
+                      Impact Metrics
+                    </h3>
+                    <ul className="space-y-2 text-gray-700">
+                      {selectedProject.metrics.map((metric, i) => (
+                        <li key={i}>• {metric}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mt-8 flex gap-4 justify-end">
+                    <Button
+                      variant="outline"
+                      className="rounded-2xl flex gap-2"
+                    >
+                      <Github className="w-4 h-4" /> GitHub
+                    </Button>
+                    <Button className="rounded-2xl flex gap-2">
+                      <ExternalLink className="w-4 h-4" /> Live Demo
+                    </Button>
+                  </div>
+                </motion.div>
+              </DialogContent>
+            </Dialog>
+          )}
+        </AnimatePresence>
+
+        <div className="mt-20 text-center text-gray-500 text-sm">
+          © {new Date().getFullYear()} Samuel. Engineered for reliability.
+        </div>
+      </div>
+    </div>
+  );
+}
